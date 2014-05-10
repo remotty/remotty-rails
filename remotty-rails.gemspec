@@ -18,8 +18,12 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency 'railties', '~> 4.0'
+  spec.add_dependency 'active_model_serializers'
+  spec.add_dependency 'rack-cors'
+  spec.add_dependency 'paperclip'
+  spec.add_dependency 'httparty'
   spec.add_runtime_dependency 'devise'
-  
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
 end

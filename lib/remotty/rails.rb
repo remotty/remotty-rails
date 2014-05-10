@@ -1,7 +1,8 @@
-require "remotty/rails/version"
+require 'remotty/rails/version'
 
 module Remotty
   module Rails
-    # Your code goes here...
+    require 'remotty/rails/engine' if defined?(Rails)
+    require 'remotty/rails/authentication'
   end
 end
