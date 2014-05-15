@@ -1,29 +1,20 @@
-# Remotty::Rails
+# remotty-rails
 
-Remotty에서 사용하는 rails관련 base package입니다.
 AngularJS + Rails API를 사용할 때 기본적인 셋팅을 도와주어 빠른 초기 셋팅을 가능하게 합니다.
 
-## library
+## Description
 
-일반적으로 사용되는 유명 라이브러리들과 remotty에서 자체적으로 만든 라이브러리를 함께 사용합니다.
+### 적용사항
 
-* rails
-  * `rails-api` (https://github.com/rails-api/rails-api)
-  * `active_model_serializers` (https://github.com/rails-api/active_model_serializers)
-  * `paperclip` (https://github.com/thoughtbot/paperclip)
-* authentication
-  * `devise` (https://github.com/plataformatec/devise)
-  * `token_header_authenticable` (by remotty)
-  * `json_auth_failure` (by remotty)
-  * `custom_user_controllers` (by remotty)
-  * `user_authentication` (by remotty)
-  * `user_serializer` (by remotty)
-* controller helper
-  * `remotty::application_controller` (by remotty)
+* header의 token을 이용한 인증처리
+  * auth_token model 추가
+* facebook/twitter oauth login
+  * oauth_authentication model 추가
+* devise controller json 반환
+* CORS
+* no cookie/no session
 
-## by remotty
-
-### token_header_authenticable
+### Token Based Header Authenticable
 
 header에 email과 token을 전달하여 인증을 처리함
 
@@ -32,106 +23,99 @@ header에 email과 token을 전달하여 인증을 처리함
 * X-Auth-Device : source (web(default)/ios/android/...)
 * X-Auth-Device-Info : source info (ip(default)/...)
 
-### json_auth_failure
+### JSON format
 
-devise 에러처리
+* disable root globally
+* failure default syntax
 
-```
+```json
 {
-  error: {
-    code: "UNAUTHORIZED",
-    message: message
+  "error":{
+    "code":"ERROR_CODE",
+    "message":"error message"
   }
 }
 ```
 
-### Remotty::ApplicationController
+### Controller Helper
 
-render_error
+* render_error helper
 
+```ruby
+def render_error(code = 'ERROR', message = '', status = 400)
+  render json: {
+    error: {
+      code: code,
+      message: message
+    }
+  }, :status => status
+end
 ```
-render json: {
-  error: {
-    code: code,
-    message: message
-  }
-}, :status => status
-```
 
-### Remotty::UserAuthentication
 
-user model helper
+## Library
 
-### Remotty::UserSerializer
+remotty-rails에서 사용중인 라이브러리 입니다.
 
-add token (virtual attribute)
+* `rails-api`
+  * Rails for API only application (https://github.com/rails-api/rails-api)
+* `active_model_serializers`
+  * JSON serialization of objects (https://github.com/rails-api/active_model_serializers)
+* `paperclip`+`rmagick`+`fog`
+  * Easy file attachment management (https://github.com/thoughtbot/paperclip)
+* `devise`
+  * Flexible authentication solution (https://github.com/plataformatec/devise)
+
 
 ## Installation
 
-Create Rails API Project
+* Create Rails API Project
 
-    $ gem install rails -v 4.0.4 --no-ri --no-rdoc
-    $ rails-api new {{project}} --skip-test-unit --skip-sprockets
-
-Add this line to your application's Gemfile:
-
-    # Remotty Rails Package
-    gem 'remotty-rails'
-    gem 'rack-cors', :require => 'rack/cors'
-    gem 'active_model_serializers'
-
-    # Authentication
-    gem 'devise'
-    gem 'omniauth-facebook'
-    gem 'omniauth-twitter'
-
-    # File upload
-    gem 'paperclip'
-    gem 'rmagick', require: false
-    gem 'fog'
-
-    group :development do
-      gem 'thin'
-      gem 'annotate'
-      gem 'better_errors'
-      gem 'binding_of_caller'
-      gem 'letter_opener'
-    end
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install remotty-rails
-
-
-Model Migration
-
-    $ rails generate devise:install
-    $ rails generate devise User
-    $ rails generate remotty:rails:install
-    $ rails generate serializer user
-
-## Usage
-
-### initializers/devise.rb
-
-* skip session storage
+```sh
+$ gem install rails -v 4.0.4 --no-ri --no-rdoc
+$ rails-api new {{project}} --skip-test-unit --skip-sprockets
 ```
+
+* Add this line to your application's Gemfile:
+
+```ruby
+# Remotty Rails Package
+gem 'remotty-rails'
+gem 'rack-cors', :require => 'rack/cors'
+gem 'active_model_serializers'
+
+# Authentication
+gem 'devise'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+
+# File upload
+gem 'paperclip'
+gem 'rmagick', require: false
+gem 'fog'
+```
+
+* And then execute:
+
+```sh
+$ bundle
+```
+
+* Model Migration
+
+```sh
+$ rails generate devise:install
+$ rails generate devise User
+$ rails generate remotty:rails:install
+$ rails generate serializer user
+$ rake db:migrate
+```
+
+* `initializers/devise.rb` update
+
+```ruby
 config.skip_session_storage = [:http_auth, :token_header_auth, :params_auth]
-```
-
-* scoped view
-
-```
 config.scoped_views = true
-```
-
-* add strategies & failure_app
-
-```
 config.warden do |manager|
   manager.failure_app = Remotty::Rails::Authentication::JsonAuthFailure
   manager.strategies.add :token_header_authenticable, Remotty::Rails::Authentication::Strategies::TokenHeaderAuthenticable
@@ -139,20 +123,11 @@ config.warden do |manager|
 end
 ```
 
-* 토큰 유효기간
+* `app/models/user.rb` update
 
-```
-config.remember_for = 2.weeks
-```
-
-### user.rb
-
-* user model
-
-```
+```ruby
 class User < ActiveRecord::Base
   include Remotty::UserAuthentication
-  include Remotty::Attachment
 
   devise :database_authenticatable, :registerable, :confirmable, :omniauthable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -164,50 +139,39 @@ class User < ActiveRecord::Base
 
   has_attached_file :avatar, :styles => { :original => "512x512#", :small => "200x200#", :thumb => "64x64#" }, :default_url => ''
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
-  remotty_attachmenty :avatar
 
 end
 ```
 
-### user_serializer.rb
+* `app/serializers/user_serializer.rb` update
 
-* user serializer
-
-```
+```ruby
 class UserSerializer < Remotty::UserSerializer
 end
 ```
 
-### development.rb
+* `config/routes.rb` update
 
-```
-config.action_mailer.delivery_method = :letter_opener
-```
-
-### routes.rb
-
-```
-  scope :api do
-    scope :v1 do
-      devise_for :users,
-                 :path => 'session',
-                 :path_names => {
-                   sign_in: 'login',
-                   sign_out: 'logout'
-                 },
-                 :controllers => { sessions:           'remotty/users/sessions',
-                                   registrations:      'remotty/users/registrations',
-                                   confirmations:      'remotty/users/confirmations',
-                                   omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
-    end
+```ruby
+scope :api do
+  scope :v1 do
+    devise_for :users,
+               :path => 'session',
+               :path_names => {
+                 sign_in: 'login',
+                 sign_out: 'logout'
+               },
+               :controllers => { sessions:           'remotty/users/sessions',
+                                 registrations:      'remotty/users/registrations',
+                                 confirmations:      'remotty/users/confirmations',
+                                 omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
   end
+end
 ```
 
-### Application Controller Helper
+* `app/controllers/application_controller` update
 
-* application_controller 상속
-
-```
+```ruby
 class ApplicationController < Remotty::ApplicationController
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -222,17 +186,50 @@ class ApplicationController < Remotty::ApplicationController
 end
 ```
 
-### paperclip
+* `initialzers/paperclip.rb` create
 
-* initialzers/paperclip.rb
-
-```
+```ruby
 Paperclip::Attachment.default_options.update({ :hash_secret => 'xxxxxxx' }) # SecureRandom.base64(128)
 ```
 
+## Recommend Setting
+
+### 유용한 Gemfile
+
+`Gemfile` update
+
+```ruby
+group :development do
+  gem 'thin'
+  gem 'annotate'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'letter_opener'
+end
+```
+
+### sendmail test
+
+`development.rb` update
+
+```ruby
+config.action_mailer.delivery_method = :letter_opener
+```
+
 ### custom mail view
-  * views/devise/mailer/confirmation_instructions.html.erb
-  * views/devise/mailer/reset_password_instructions.html.erb
+
+
+`views/devise/mailer/confirmation_instructions.html.erb` create
+`views/devise/mailer/reset_password_instructions.html.erb` create
+
+
+### token 유효기간 변경
+
+`initializers/devise.rb` update
+
+```ruby
+config.remember_for = 2.weeks
+```
 
 ## Contributing
 
