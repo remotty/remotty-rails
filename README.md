@@ -61,7 +61,7 @@ remotty-rails에서 사용중인 라이브러리 입니다.
   * Rails for API only application (https://github.com/rails-api/rails-api)
 * `active_model_serializers`
   * JSON serialization of objects (https://github.com/rails-api/active_model_serializers)
-* `paperclip`+`rmagick`+`fog`
+* `paperclip`+`rmagick`+`fog`+`httparty`
   * Easy file attachment management (https://github.com/thoughtbot/paperclip)
 * `devise`
   * Flexible authentication solution (https://github.com/plataformatec/devise)
@@ -79,20 +79,11 @@ $ rails-api new {{project}} --skip-test-unit --skip-sprockets
 * Add this line to your application's Gemfile:
 
 ```ruby
-# Remotty Rails Package
 gem 'remotty-rails'
-gem 'rack-cors', :require => 'rack/cors'
-gem 'active_model_serializers'
-
-# Authentication
 gem 'devise'
+gem 'paperclip'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-
-# File upload
-gem 'paperclip'
-gem 'rmagick', require: false
-gem 'fog'
 ```
 
 * And then execute:
@@ -187,6 +178,8 @@ end
 ```
 
 * `initialzers/paperclip.rb` create
+
+hash_secret에는 random하게 생성된 값을 입력한다.
 
 ```ruby
 Paperclip::Attachment.default_options.update({ :hash_secret => 'xxxxxxx' }) # SecureRandom.base64(128)
