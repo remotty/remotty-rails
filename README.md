@@ -97,7 +97,6 @@ $ bundle
 ```sh
 $ rails generate devise:install
 $ rails generate devise User
-$ rails generate serializer user
 $ rails generate remotty:rails:install
 $ rake db:migrate
 ```
