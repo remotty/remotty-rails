@@ -97,27 +97,9 @@ $ bundle
 ```sh
 $ rails generate devise:install
 $ rails generate devise User
-$ rails generate remotty:rails:install
 $ rails generate serializer user
+$ rails generate remotty:rails:install
 $ rake db:migrate
-```
-
-* `app/models/user.rb` update
-
-```ruby
-class User < ActiveRecord::Base
-  include Remotty::UserAuthentication
-
-  devise :database_authenticatable, :registerable, :confirmable, :omniauthable,
-         :recoverable, :rememberable, :trackable, :validatable  
-end
-```
-
-* `app/serializers/user_serializer.rb` update
-
-```ruby
-class UserSerializer < Remotty::UserSerializer
-end
 ```
 
 * `config/routes.rb` update
@@ -136,14 +118,6 @@ scope :api do
                                  confirmations:      'remotty/users/confirmations',
                                  omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
   end
-end
-```
-
-* `app/controllers/application_controller` update
-
-```ruby
-class ApplicationController < ActionController::API
-	include Remotty::BaseApplicationController
 end
 ```
 

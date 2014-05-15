@@ -21,10 +21,19 @@ module Remotty
           template 'auth_token.rb', 'app/models/auth_token.rb'
           template 'oauth_authentication.rb', 'app/models/oauth_authentication.rb'
           template 'paperclip_hash.rb', 'config/initializers/paperclip_hash.rb'
+          template 'user_serializer.rb', 'app/serializers/user_serializer.rb'
           append_to_file 'config/initializers/paperclip_hash.rb' do
             secret = SecureRandom.hex(40)
             "Paperclip::Attachment.default_options.update({ :hash_secret => '#{secret}' })"
           end
+          inject_into_class 'app/controllers/application_controller.rb', ApplicationController do
+            "  include Remotty::BaseApplicationController\n"
+          end
+          inject_into_class 'app/models/user.rb', User do
+            "  include Remotty::UserAuthentication\n"
+          end
+          gsub_file 'app/models/user.rb', 'registerable', 'registerable, :omniauthable'
+
           migration_template 'add_column_to_users.rb',          'db/migrate/add_column_to_users.rb'
           migration_template 'create_auth_tokens.rb',           'db/migrate/create_auth_tokens.rb'
           migration_template 'create_oauth_authentications.rb', 'db/migrate/create_oauth_authentications.rb'
