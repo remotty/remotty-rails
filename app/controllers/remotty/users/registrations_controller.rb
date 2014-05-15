@@ -79,4 +79,13 @@ class Remotty::Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  # DELETE /resource
+  # 회원탈퇴
+  def destroy
+    resource.destroy
+    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+    set_flash_message :notice, :destroyed if is_flashing_format?
+    yield resource if block_given?
+    render nothing: true, status: :no_content
+  end
 end
