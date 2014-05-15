@@ -20,6 +20,7 @@ module Remotty
         def copy_purple_attachment
           template 'auth_token.rb', 'app/models/auth_token.rb'
           template 'oauth_authentication.rb', 'app/models/oauth_authentication.rb'
+          template 'paperclip.rb', 'config/initializers/paperclip.rb'
           migration_template 'add_column_to_users.rb',          'db/migrate/add_column_to_users.rb'
           migration_template 'create_auth_tokens.rb',           'db/migrate/create_auth_tokens.rb'
           migration_template 'create_oauth_authentications.rb', 'db/migrate/create_oauth_authentications.rb'
