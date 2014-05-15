@@ -141,17 +141,9 @@ end
 
 * `app/controllers/application_controller` update
 
-parameter sanitizer
-
 ```ruby
-class ApplicationController < Remotty::ApplicationController
-
-  protected
-
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :current_password, :avatar) }
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :avatar, :password, :password_confirmation, :current_password) }
-  end
+class ApplicationController < ActionController::API
+	include Remotty::BaseApplicationController
 end
 ```
 
@@ -200,6 +192,22 @@ config.action_mailer.delivery_method = :letter_opener
 
 ```ruby
 config.remember_for = 2.weeks
+```
+
+### devise parameter sanitizer  
+
+user model에 column 추가시 `application_controller.rb` 파일에 추가함
+
+```ruby
+class ApplicationController < ActionController::API
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :current_password, :avatar) }
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :avatar, :password, :password_confirmation, :current_password) }
+  end
+end
 ```
 
 ## Contributing
