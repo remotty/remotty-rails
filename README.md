@@ -102,18 +102,6 @@ $ rails generate serializer user
 $ rake db:migrate
 ```
 
-* `initializers/devise.rb` update
-
-```ruby
-config.skip_session_storage = [:http_auth, :token_header_auth, :params_auth]
-config.scoped_views = true
-config.warden do |manager|
-  manager.failure_app = Remotty::Rails::Authentication::JsonAuthFailure
-  manager.strategies.add :token_header_authenticable, Remotty::Rails::Authentication::Strategies::TokenHeaderAuthenticable
-  manager.default_strategies(:scope => :user).unshift :token_header_authenticable
-end
-```
-
 * `app/models/user.rb` update
 
 ```ruby
@@ -121,16 +109,7 @@ class User < ActiveRecord::Base
   include Remotty::UserAuthentication
 
   devise :database_authenticatable, :registerable, :confirmable, :omniauthable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-  has_many :auth_tokens, dependent: :destroy
-  has_many :oauth_authentications, dependent: :destroy
-
-  validates :name, presence: true
-
-  has_attached_file :avatar, :styles => { :original => "512x512#", :small => "200x200#", :thumb => "64x64#" }, :default_url => ''
-  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
-
+         :recoverable, :rememberable, :trackable, :validatable  
 end
 ```
 
@@ -162,17 +141,16 @@ end
 
 * `app/controllers/application_controller` update
 
+parameter sanitizer
+
 ```ruby
 class ApplicationController < Remotty::ApplicationController
-  before_action :authenticate_user!
-  before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :current_password, :avatar) }
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :avatar, :password, :password_confirmation, :current_password) }
-    # :name, :avatar, :current_password
   end
 end
 ```

@@ -3,6 +3,16 @@ require 'httparty'
 module Remotty::UserAuthentication
   extend ActiveSupport::Concern
 
+  included do
+    has_many :auth_tokens, dependent: :destroy
+    has_many :oauth_authentications, dependent: :destroy
+
+    validates :name, presence: true
+
+    has_attached_file :avatar, :styles => { :original => "512x512#", :small => "200x200#", :thumb => "64x64#" }
+    validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+  end
+
   attr_accessor :auth_token
 
   def generate_auth_token!(source, source_info)
