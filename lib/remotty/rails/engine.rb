@@ -1,5 +1,7 @@
 require 'rails'
 require 'rack/cors'
+require 'active_model/serializer'
+require 'active_model/array_serializer'
 
 module Remotty
   module Rails

@@ -18,12 +18,18 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'railties', '~> 4.0'
-  spec.add_dependency 'active_model_serializers'
-  spec.add_dependency 'rack-cors'
-  spec.add_dependency 'paperclip'
-  spec.add_dependency 'httparty'
-  spec.add_runtime_dependency 'devise'
+  spec.add_dependency         'rack-cors',   '>= 0.2.9'
+  spec.add_dependency         'active_model_serializers', '>= 0.8.1'
+
+  spec.add_dependency         'devise',      '>= 3.2.4'
+  spec.add_dependency         'omniauth-facebook', '>= 1.6.0'
+  spec.add_dependency         'omniauth-twitter',  '>= 1.0.1'
+
+  spec.add_dependency         'paperclip', '>= 4.1.1'
+  spec.add_dependency         'rmagick',   '>= 2.13.2'
+  spec.add_dependency         'fog',       '>= 1.22.0'
+  spec.add_dependency         'httparty',  '>= 0.13.1'
+
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
 end
