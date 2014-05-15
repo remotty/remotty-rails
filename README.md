@@ -147,14 +147,6 @@ class ApplicationController < ActionController::API
 end
 ```
 
-* `initializers/paperclip.rb` update
-
-hash_secret에는 random하게 생성된 값을 입력한다.
-
-```ruby
-Paperclip::Attachment.default_options.update({ :hash_secret => 'xxxxxxxxxxxxxxxxxxxxxxxxxxx' })
-```
-
 ## Recommend Setting
 
 ### 유용한 Gemfile
