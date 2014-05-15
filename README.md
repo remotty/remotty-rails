@@ -1,8 +1,11 @@
 # Remotty::Rails
 
 Remotty에서 사용하는 rails관련 base package입니다.
+AngularJS + Rails API를 사용할 때 기본적인 셋팅을 도와주어 빠른 초기 셋팅을 가능하게 합니다.
 
 ## library
+
+일반적으로 사용되는 유명 라이브러리들과 remotty에서 자체적으로 만든 라이브러리를 함께 사용합니다.
 
 * rails
   * `rails-api` (https://github.com/rails-api/rails-api)
