@@ -1,6 +1,9 @@
 require 'rails'
 
 class Remotty::ApplicationController < ActionController::API
+  before_action :authenticate_user!
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   # To resolve the following error: ActionController::UnknownFormat
   include ActionController::StrongParameters
 
@@ -22,4 +25,8 @@ protected
       }
     }, :status => status
   end
+
+  def configure_permitted_parameters
+  end
+
 end

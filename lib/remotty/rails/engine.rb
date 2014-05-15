@@ -23,6 +23,17 @@ module Remotty
                                                        :default_url => ''
                                                      })
 
+        # Devise
+        Devise.setup do |config|
+          config.skip_session_storage = [:http_auth, :token_header_auth, :params_auth]
+          config.scoped_views = true
+          config.warden do |manager|
+            manager.failure_app = Remotty::Rails::Authentication::JsonAuthFailure
+            manager.strategies.add :token_header_authenticable, Remotty::Rails::Authentication::Strategies::TokenHeaderAuthenticable
+            manager.default_strategies(:scope => :user).unshift :token_header_authenticable
+          end
+        end
+
         # CORS
         ::Rails.application.config.middleware.use Rack::Cors do
           allow do
