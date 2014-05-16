@@ -10,7 +10,22 @@ AngularJS + Rails API를 사용할 때 기본적인 셋팅을 도와주어 빠�
   * auth_token model 추가
 * facebook/twitter oauth login
   * oauth_authentication model 추가
-* devise controller json 반환
+* join
+  * email
+  * oauth (facebook/twitter)
+  * email이 없는 경우도 처리
+* custom devise controller
+  * full customizing
+  * json response
+  * sessions controller
+  * registrations controller
+  * confirmations controller
+  * passwords controller
+  * omniauth_callbacks controller
+* user model
+  * use avatar for profile image
+* use paperclip for attachment
+* use serializer for json response
 * CORS
 * no cookie/no session
 
@@ -115,6 +130,7 @@ scope :api do
                :controllers => { sessions:           'remotty/users/sessions',
                                  registrations:      'remotty/users/registrations',
                                  confirmations:      'remotty/users/confirmations',
+                                 passwords:          'remotty/users/passwords',
                                  omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
   end
 end
@@ -157,6 +173,33 @@ config.action_mailer.delivery_method = :letter_opener
 
 ```ruby
 config.remember_for = 2.weeks
+```
+
+### omniauth setting
+
+`devise.rb` update
+
+```ruby
+config.omniauth :facebook,
+                Settings.omniauth.facebook.app_id,
+                Settings.omniauth.facebook.app_secret,
+                {
+                  scope: 'email',
+                  image_size: 'large',
+                  provider_ignores_state: true
+                }
+config.omniauth :twitter,  
+                Settings.omniauth.twitter.consumer_key,
+                Settings.omniauth.twitter.consumer_secret, {
+                :image_size => 'original',
+                :authorize_params => {
+                  :force_login => true
+                },
+                :setup => lambda do |env|
+                  req = Rack::Request.new(env)
+                  req.session.options[:cookie_only] = true
+                  req.session.options[:defer] = false
+                end
 ```
 
 ### devise parameter sanitizer  

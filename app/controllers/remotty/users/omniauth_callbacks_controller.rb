@@ -1,32 +1,49 @@
 class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  include Remotty::Users::BaseController
   include ActionController::Flash
 
+  # omniauth callback 처리
+  # 정보에 따라 유저를 만들던가 연결하던가 추가 정보를 입력받도록 에러를 리턴함
+  #
   def all
+    # omniauth에서 생성한 session 제거
+    session.options[:skip] = true
+    response.headers['Set-Cookie'] = 'rack.session=; path=/; expires=Thu, 01-Jan-1970 00:00:00 GMT'
+
     auth = request.env['omniauth.auth']
     user = from_omniauth(auth)
     @ret = {}
 
-    if user
-      if user.persisted?
-        sign_in(:user, user, store: false)
-        token = user.generate_auth_token!('web', request.remote_ip)
-
-        @ret = user.with_token(token)
-      else
-        @ret = {
-          error: {
-            code: "OAUTH_LOGIN_ERROR",
-            message: "email required!"
+    if user && user.persisted?
+      sign_in(:user, user, store: false)
+      token = user.generate_auth_token!(auth_source)
+      @ret = user.with_token(token)
+    elsif user && user.errors.size > 0
+      @ret = {
+        error: {
+          code: 'OAUTH_LOGIN_ERROR_EMAIL_INVALID',
+          message: user.errors.full_messages.first,
+          data: {
+            oauth: {
+              credentials: auth[:credentials],
+              provider: auth[:provider],
+              uid: auth[:uid],
+              info: {
+                name: auth[:info][:name],
+                image: auth[:info][:image]
+              }
+            }
           }
         }
-      end
+      }
     else
       @ret = {
         error: {
-          code: "OAUTH_LOGIN_ERROR",
-          message: "oauth login error!"
+          code: 'OAUTH_LOGIN_ERROR',
+          message: 'require provider & uid!!'
         }
       }
+      @ret[:error][:data] = user if user
     end
 
     render :inline => "<script>window.opener.oauthCallback(#{@ret.to_json}); window.close();</script>"
@@ -48,37 +65,34 @@ class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
 
   private
 
+  # omniauth callback 분석
   def from_omniauth(auth)
-    if auth.provider && auth.uid # 인증정보가 있으면..
-      oauth = OauthAuthentication.find_by_provider_and_uid(auth.provider, auth.uid)
+    if auth[:provider] && auth[:uid] # 인증정보가 있으면..
+      oauth = OauthAuthentication.find_by_provider_and_uid(auth[:provider], auth[:uid])
       if oauth # 이미 가입되어 있다면 oauth 정보를 갱신함
-        oauth.set_oauth_info(auth)
+        oauth.update_with_credential(auth[:credentials])
         oauth.save
 
         return oauth.user
-      else # 기존 정보가 없음!
-        if auth.info.email.present? # 이메일이 있으면 가입 또는 연동
-          user = User.find_or_create_by(email: auth.info.email) do |u|
-            u.name = auth.info.name || auth.info.email
+      else # 가입 정보가 없음!
+        if auth[:info][:email].present? # 이메일이 있으면 가입 또는 연동
+          user = User.find_or_create_by(email: auth[:info][:email]) do |u|
+            u.name = auth[:info][:name] || auth[:info][:email]
             u.password = Devise.friendly_token[0,20]
-            u.set_oauth_avatar(auth)
-            u.confirm!
+            u.skip_confirmation!
             u.save
           end
           user.confirm! # 인증 대기 중이면 바로 인증시켜버림
 
           # oauth 정보 생성
-          oauth = OauthAuthentication.new({
-                                            user_id:user.id,
-                                            provider:auth.provider,
-                                            uid:auth.uid
-                                          })
-          oauth.set_oauth_info(auth)
-          oauth.save
+          user.add_oauth_info(auth)
 
           return user
-        else
-          return User.new({ name: auth.info.name })
+        else # 이메일이 없으면 추가정보를 입력받도록 함
+          user = User.new
+          user.errors.add(:email, "email required")
+
+          return user
         end
       end
     end

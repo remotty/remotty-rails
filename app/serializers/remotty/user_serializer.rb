@@ -1,3 +1,16 @@
+# user serializer
+#
+# ==== column
+# * +id+
+# * +name+
+# * +email+
+# * +use_password+
+# * +avatar+
+#   * +original+
+#   * +small+
+#   * +thumb+
+# * +auth_token+
+#
 class Remotty::UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :email, :use_password, :avatar, :auth_token
 

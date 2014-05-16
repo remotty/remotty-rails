@@ -13,6 +13,6 @@ gem 'omniauth-twitter'
 
 # File upload
 gem 'paperclip'
+gem 'open_uri_redirections'
 gem 'rmagick', require: false
 gem 'fog'
-gem 'httparty'

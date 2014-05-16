@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency         'paperclip', '>= 4.1.1'
   spec.add_dependency         'rmagick',   '>= 2.13.2'
   spec.add_dependency         'fog',       '>= 1.22.0'
-  spec.add_dependency         'httparty',  '>= 0.13.1'
+  spec.add_dependency         'open_uri_redirections',  '>= 0.1.4'
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"

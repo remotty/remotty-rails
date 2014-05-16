@@ -1,22 +1,32 @@
 class Remotty::Users::SessionsController < Devise::SessionsController
+  include Remotty::Users::BaseController
   include ActionController::Flash
   wrap_parameters :user, include: [:email, :password]
 
   # POST /resource/sign_in
-  # 로그인
+  # email과 password로 로그인
+  # 새로운 토큰 생성
+  #
+  # ==== return
+  # * +success+ - 로그인 후 user with token json return
+  # * +failure+ - unauthorized with error message
+  #
   def create
     self.resource = warden.authenticate!(:scope => resource_name)
-
     sign_in(resource_name, resource, store: false)
     yield resource if block_given?
-
-    token = resource.generate_auth_token!('web', request.remote_ip)
-
+    token = resource.generate_auth_token!(auth_source)
     render json: resource.with_token(token)
   end
 
   # DELETE /resource/sign_out
-  # 로그아웃
+  # 로그아웃. 로그인이 되어 있지 않아도 에러를 발생하지는 않음
+  # 토큰이용시 토큰을 삭제함
+  #
+  # ==== return
+  # * +success+ - no_content
+  # * +failure+ - no_content
+  #
   def destroy
     user = current_user
 
