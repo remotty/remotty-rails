@@ -56,7 +56,7 @@ module Remotty::Rails
         inject_into_class 'app/models/user.rb', User do
           "  include Remotty::BaseUser\n"
         end
-        gsub_file 'app/models/user.rb', 'registerable', 'registerable, :omniauthable'
+        gsub_file 'app/models/user.rb', 'registerable', 'registerable, :confirmable, :omniauthable'
 
         migration_template 'add_column_to_users.rb',          'db/migrate/add_column_to_users.rb'
         migration_template 'create_auth_tokens.rb',           'db/migrate/create_auth_tokens.rb'
