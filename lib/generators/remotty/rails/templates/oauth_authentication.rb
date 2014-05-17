@@ -9,8 +9,6 @@ class OauthAuthentication < ActiveRecord::Base
   validates :provider, presence: true
   validates :uid,      presence: true
 
-  private
-
   # access_token, access_token_secret, expires 정보 업데이트
   def update_with_credential(credential)
     self.access_token = credential[:token]

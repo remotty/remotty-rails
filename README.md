@@ -96,9 +96,9 @@ $ rails-api new {{project}} --skip-test-unit --skip-sprockets
 ```ruby
 gem 'remotty-rails'
 gem 'devise'
-gem 'paperclip'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+gem 'paperclip'
 ```
 
 * And then execute:
@@ -107,33 +107,38 @@ gem 'omniauth-twitter'
 $ bundle
 ```
 
-* Model Migration
+* install devise
 
 ```sh
 $ rails generate devise:install
 $ rails generate devise User
+```
+
+* install remotty-rails
+
+`initializers/devise.rb`에서 `config.secret_key` 주석 지우고 작업
+
+```
 $ rails generate remotty:rails:install
 $ rake db:migrate
 ```
 
 * `config/routes.rb` update
 
+`devise_for :users`를 지우고 추가함
+
 ```ruby
-scope :api do
-  scope :v1 do
-    devise_for :users,
-               :path => 'session',
-               :path_names => {
-                 sign_in: 'login',
-                 sign_out: 'logout'
-               },
-               :controllers => { sessions:           'remotty/users/sessions',
-                                 registrations:      'remotty/users/registrations',
-                                 confirmations:      'remotty/users/confirmations',
-                                 passwords:          'remotty/users/passwords',
-                                 omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
-  end
-end
+devise_for :users,
+           :path => 'api/v1/session',
+             :path_names => {
+               sign_in: 'login',
+               sign_out: 'logout'
+             },
+             :controllers => { sessions:           'remotty/users/sessions',
+                               registrations:      'remotty/users/registrations',
+                               confirmations:      'remotty/users/confirmations',
+                               passwords:          'remotty/users/passwords',
+                               omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
 ```
 
 ## Recommend Setting
@@ -155,8 +160,10 @@ end
 ### sendmail test
 
 `development.rb` update
+`letter_opener`는 gem 추가해야함 `gem 'letter_opener'`
 
 ```ruby
+config.action_mailer.default_url_options = { host: 'localhost:9000' }
 config.action_mailer.delivery_method = :letter_opener
 ```
 

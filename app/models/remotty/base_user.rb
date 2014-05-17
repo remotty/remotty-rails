@@ -1,5 +1,3 @@
-require 'httparty'
-
 module Remotty::BaseUser
   extend ActiveSupport::Concern
 
