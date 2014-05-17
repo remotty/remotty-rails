@@ -1,4 +1,6 @@
 class Remotty::Users::RegistrationsController < Devise::RegistrationsController
+  include Remotty::Users::BaseController
+
   wrap_parameters :user, include: [:email, :name, :password, :password_confirmation, :current_password]
 
   # POST /resource
@@ -7,12 +9,22 @@ class Remotty::Users::RegistrationsController < Devise::RegistrationsController
     build_resource(sign_up_params)
     resource.use_password = true
 
+    # oauth정보가 있으면 validation 체크
+    if params[:oauth]
+      unless valid_credential?(oauth_params)
+        render_error 'UNAUTHORIZED', 'Oauth credentials information is invalid', :unauthorized and return
+      end
+    end
+
     if resource.save
       yield resource if block_given?
+
+      resource.add_oauth_info(oauth_params) if params[:oauth]
+
       if resource.active_for_authentication?
         sign_up(resource_name, resource)
 
-        token = resource.generate_auth_token!('web', request.remote_ip)
+        token = resource.generate_auth_token!(auth_source)
 
         render json: resource.with_token(token)
       else
@@ -87,5 +99,34 @@ class Remotty::Users::RegistrationsController < Devise::RegistrationsController
     set_flash_message :notice, :destroyed if is_flashing_format?
     yield resource if block_given?
     render nothing: true, status: :no_content
+  end
+
+  private
+
+  def oauth_params
+    params.require(:oauth).permit :provider, :uid, info: [:name, :image], credentials: [:token, :secret, :expires_at]
+  end
+
+  # credential 체크
+  def valid_credential?(oauth_params)
+    if oauth_params['provider'] == 'twitter'
+      client = Twitter::REST::Client.new do |config|
+        config.consumer_key        = Settings.omniauth.twitter.consumer_key
+        config.consumer_secret     = Settings.omniauth.twitter.consumer_secret
+        config.access_token        = oauth_params['credentials']['token']
+        config.access_token_secret = oauth_params['credentials']['secret']
+      end
+
+      begin
+        twitter_user = client.user
+        if twitter_user.id == oauth_params['uid'].to_i
+          return true
+        end
+      rescue Twitter::Error
+        return false
+      end
+    end
+
+    false
   end
 end
