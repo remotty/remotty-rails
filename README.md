@@ -95,9 +95,13 @@ $ rails-api new {{project}} --skip-test-unit --skip-sprockets
 
 ```ruby
 gem 'remotty-rails'
+
+# user
 gem 'devise'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+
+# attachment
 gem 'paperclip'
 ```
 
