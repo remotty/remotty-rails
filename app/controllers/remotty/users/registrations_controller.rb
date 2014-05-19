@@ -1,6 +1,6 @@
 class Remotty::Users::RegistrationsController < Devise::RegistrationsController
   include Remotty::Users::BaseController
-
+  before_action :authenticate_scope!, only: [:avatar, :remove_avatar]
   wrap_parameters :user, include: [:email, :name, :password, :password_confirmation, :current_password]
 
   # POST /resource
@@ -88,6 +88,32 @@ class Remotty::Users::RegistrationsController < Devise::RegistrationsController
         render_error 'VALIDATION_ERROR',
                      resource.errors.full_messages.first
       end
+    end
+  end
+
+  # POST /resource/avatar
+  # 회원 프로필 이미지 수정
+  def avatar
+    resource.avatar = params[:file]
+
+    if resource.save
+      render json: resource
+    else
+      render_error 'VALIDATION_ERROR',
+                   resource.errors.full_messages.first
+    end
+  end
+
+  # DELETE /resource/avatar
+  # 회원 프로필 이미지 삭제
+  def remove_avatar
+    resource.avatar = nil
+
+    if resource.save
+      render json: resource
+    else
+      render_error 'VALIDATION_ERROR',
+                   resource.errors.full_messages.first
     end
   end
 

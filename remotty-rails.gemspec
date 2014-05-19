@@ -6,7 +6,7 @@ require 'remotty/rails/version'
 Gem::Specification.new do |spec|
   spec.name          = "remotty-rails"
   spec.version       = Remotty::Rails::VERSION
-  spec.authors       = ["subicura", "bbugguj"]
+  spec.authors       = ["Chungsub Kim", "Jaehue Jang"]
   spec.email         = ["subicura@subicura.com", "bbugguj@gmail.com"]
   spec.summary       = 'rails base package by remotty'
   spec.description   = 'token based authentication and more useful library..'

@@ -139,6 +139,11 @@ devise_for :users,
                                confirmations:      'remotty/users/confirmations',
                                passwords:          'remotty/users/passwords',
                                omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
+
+devise_scope :user do
+  post   'api/v1/session/avatar' => 'users/registrations#avatar'
+  delete 'api/v1/session/avatar' => 'users/registrations#remove_avatar'
+end
 ```
 
 ## Recommend Setting
