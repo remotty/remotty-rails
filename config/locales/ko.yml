@@ -1,6 +1,7 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 
 ko:
+  # devise
   errors:
     messages:
       expired: "가(이) 만료되었습니다. 새로 요청해 주십시오"
@@ -56,3 +57,8 @@ ko:
         subject: '비밀번호 변경 확인 메일'
       unlock_instructions:
         subject: '계정 Unlock 메일'
+
+  # cancan
+  unauthorized:
+    default: "접근 권한이 없습니다."
+

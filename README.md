@@ -231,6 +231,10 @@ end
 config.remember_for = 2.weeks
 ```
 
+### cancan i18n
+
+https://github.com/ryanb/cancan/wiki/Translating-your-app
+
 ## Contributing
 
 1. Fork it ( https://github.com/remotty/remotty-rails/fork )
