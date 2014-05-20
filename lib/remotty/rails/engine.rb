@@ -31,10 +31,13 @@ module Remotty::Rails
       ActiveModel::Serializer.root = false
       ActiveModel::ArraySerializer.root = false
 
-      # wrap parameters
       ActiveSupport.on_load(:action_controller) do
+        # wrap parameters
         include ActionController::ParamsWrapper
         wrap_parameters format: [:json] if respond_to?(:wrap_parameters)
+
+        # cancan
+        include CanCan::ControllerAdditions
       end
 
       # paperclip

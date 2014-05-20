@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency         'devise',      '>= 3.2.4'
   spec.add_dependency         'omniauth-facebook', '>= 1.6.0'
   spec.add_dependency         'omniauth-twitter',  '>= 1.0.1'
+  spec.add_dependency         'cancan',  '>= 1.6.10'
 
   spec.add_dependency         'paperclip', '>= 4.1.1'
   spec.add_dependency         'rmagick',   '>= 2.13.2'

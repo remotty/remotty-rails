@@ -10,6 +10,7 @@ gem 'active_model_serializers'
 gem 'devise'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+gem 'cancan'
 
 # File upload
 gem 'paperclip'
