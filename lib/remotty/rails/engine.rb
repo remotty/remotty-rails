@@ -38,6 +38,12 @@ module Remotty::Rails
 
         # cancan
         include CanCan::ControllerAdditions
+        # authority 403 forbidden
+        rescue_from CanCan::AccessDenied do |exception|
+          render_error 'FORBIDDEN',
+                       exception.message,
+                       :forbidden
+        end
       end
 
       # paperclip
