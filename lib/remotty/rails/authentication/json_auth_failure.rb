@@ -24,6 +24,10 @@ module Remotty::Rails
           i18n_message
         end
       end
+
+      def respond
+        http_auth
+      end
     end
   end
 end

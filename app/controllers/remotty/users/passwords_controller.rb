@@ -13,7 +13,9 @@ class Users::PasswordsController < Devise::PasswordsController
     yield resource if block_given?
 
     if successfully_sent?(resource)
-      render nothing: true, status: :no_content
+      render json: {
+        msg: find_message("send_instructions")
+      }
     else
       render_error 'VALIDATION_ERROR', resource.errors.full_messages.first
     end

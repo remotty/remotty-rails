@@ -6,11 +6,11 @@ require 'remotty/rails/version'
 Gem::Specification.new do |spec|
   spec.name          = "remotty-rails"
   spec.version       = Remotty::Rails::VERSION
-  spec.authors       = ["subicura"]
-  spec.email         = ["subicura@subicura.com"]
+  spec.authors       = ["Chungsub Kim", "Jaehue Jang"]
+  spec.email         = ["subicura@subicura.com", "bbugguj@gmail.com"]
   spec.summary       = 'rails base package by remotty'
-  spec.description   = 'rails base package by remotty'
-  spec.homepage      = ""
+  spec.description   = 'token based authentication and more useful library..'
+  spec.homepage      = "https://github.com/remotty/remotty-rails"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency         'devise',      '>= 3.2.4'
   spec.add_dependency         'omniauth-facebook', '>= 1.6.0'
   spec.add_dependency         'omniauth-twitter',  '>= 1.0.1'
+  spec.add_dependency         'cancan',  '>= 1.6.10'
 
   spec.add_dependency         'paperclip', '>= 4.1.1'
   spec.add_dependency         'rmagick',   '>= 2.13.2'

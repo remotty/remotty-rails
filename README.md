@@ -129,7 +129,7 @@ $ rake db:migrate
 
 * `config/routes.rb` update
 
-`devise_for :users`를 지우고 추가함
+`devise_for :users` 부분을 수정
 
 ```ruby
 devise_for :users,
@@ -143,6 +143,11 @@ devise_for :users,
                                confirmations:      'remotty/users/confirmations',
                                passwords:          'remotty/users/passwords',
                                omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
+
+devise_scope :user do
+  post   'api/v1/session/avatar' => 'users/registrations#avatar'
+  delete 'api/v1/session/avatar' => 'users/registrations#remove_avatar'
+end
 ```
 
 ## Recommend Setting
@@ -172,20 +177,13 @@ config.action_mailer.default_url_options = { host: 'localhost:9000' }
 config.action_mailer.delivery_method = :letter_opener
 ```
 
+## Configuration
+
 ### custom mail view
 
 
 `views/devise/mailer/confirmation_instructions.html.erb` create
 `views/devise/mailer/reset_password_instructions.html.erb` create
-
-
-### token 유효기간 변경
-
-`initializers/devise.rb` update
-
-```ruby
-config.remember_for = 2.weeks
-```
 
 ### omniauth setting
 
@@ -228,6 +226,14 @@ class ApplicationController < ActionController::API
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :avatar, :password, :password_confirmation, :current_password) }
   end
 end
+```
+
+### token 유효기간 변경
+
+`initializers/devise.rb` update
+
+```ruby
+config.remember_for = 2.weeks
 ```
 
 ## Contributing
