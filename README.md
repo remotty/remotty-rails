@@ -145,8 +145,8 @@ devise_for :users,
                                omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
 
 devise_scope :user do
-  post   'api/v1/session/avatar' => 'users/registrations#avatar'
-  delete 'api/v1/session/avatar' => 'users/registrations#remove_avatar'
+  post   'api/v1/session/avatar' => 'remotty/users/registrations#avatar'
+  delete 'api/v1/session/avatar' => 'remotty/users/registrations#remove_avatar'
 end
 ```
 
