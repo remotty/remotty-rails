@@ -26,6 +26,7 @@ AngularJS + Rails API를 사용할 때 기본적인 셋팅을 도와주어 빠�
   * use avatar for profile image
 * use paperclip for attachment
 * use serializer for json response
+* use kaminari for paging
 * CORS
 * no cookie/no session
 
@@ -67,6 +68,22 @@ def render_error(code = 'ERROR', message = '', status = 400)
 end
 ```
 
+* render_paging helper
+
+```ruby
+def render_paging(items)
+  meta = {
+    total_count: items.total_count,
+    current_page: items.current_page,
+    per_page: items.limit_value
+  }
+
+  render json: items,
+         meta_key: 'page',
+         meta: meta,
+         root: 'items'
+end
+```
 
 ## Library
 
@@ -99,6 +116,7 @@ gem 'devise'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'paperclip'
+gem 'kaminari'
 ```
 
 * And then execute:
