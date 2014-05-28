@@ -20,17 +20,20 @@ module Remotty::BaseApplicationController
   protected
 
   # paging - kaminari dependency
-  def render_paging(items)
-    meta = {
-      total_count: items.total_count,
-      current_page: items.current_page,
-      per_page: items.limit_value
+  def render_paging(items, options = nil)
+    page = {
+      json: items,
+      meta_key: 'page',
+      meta: {
+        total_count: items.total_count,
+        current_page: items.current_page,
+        per_page: items.limit_value
+      },
+      root: 'items'
     }
+    page.merge!(options) unless options.nil?
 
-    render json: items,
-           meta_key: 'page',
-           meta: meta,
-           root: 'items'
+    render page
   end
 
   # error
