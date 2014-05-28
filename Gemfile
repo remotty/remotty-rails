@@ -17,3 +17,6 @@ gem 'paperclip'
 gem 'open_uri_redirections'
 gem 'rmagick', require: false
 gem 'fog'
+
+# Paging
+gem 'kaminari'

@@ -12,11 +12,11 @@ class AuthToken < ActiveRecord::Base
 
   # source 정보 업데이트
   # 보통 ip가 변경될 경우가 많을듯 하고 변하지 않더라도 최종 갱신시간을 변경함
-  def update_source(source, source_info)
-    if self.source != source || self.source_info != source_info
-      self.update(source: source, source_info: source_info)
+  def update_source(new_source, new_source_info)
+    if source != new_source || source_info != new_source_info
+      update(source: new_source, source_info: new_source_info)
     else
-      self.touch
+      touch
     end
   end
 end
