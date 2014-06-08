@@ -1,4 +1,4 @@
-class Users::PasswordsController < Devise::PasswordsController
+class Remotty::Users::PasswordsController < Devise::PasswordsController
   include Remotty::Users::BaseController
 
   # POST /resource/password
