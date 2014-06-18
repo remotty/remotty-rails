@@ -51,6 +51,15 @@ class Remotty::Users::SessionsController < Devise::SessionsController
   # * +failure+ - unauthentication with error message
   #
   def show
-    render json: resource
+    resource = warden.authenticate(:scope => resource_name)
+    if resource
+      render json: resource
+    else
+      render json: {
+        error: {
+          code: "UNAUTHENTICATION"
+        }
+      }
+    end
   end
 end
