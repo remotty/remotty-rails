@@ -45,4 +45,12 @@ class Remotty::Users::SessionsController < Devise::SessionsController
     render nothing: true, status: :no_content
   end
 
+  # GET /resource
+  # 로그인한 사용자 정보 가져오기
+  # * +success+ - current_user json return
+  # * +failure+ - unauthentication with error message
+  #
+  def show
+    render json: resource
+  end
 end
