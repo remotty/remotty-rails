@@ -163,6 +163,7 @@ devise_for :users,
                                omniauth_callbacks: 'remotty/users/omniauth_callbacks'}
 
 devise_scope :user do
+  get    'api/v1/session'        => 'remotty/users/sessions#show'
   post   'api/v1/session/avatar' => 'remotty/users/registrations#avatar'
   delete 'api/v1/session/avatar' => 'remotty/users/registrations#remove_avatar'
 end
