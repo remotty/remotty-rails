@@ -58,7 +58,7 @@ class Remotty::Users::SessionsController < Devise::SessionsController
       render json: {
         error: {
           code: "UNAUTHENTICATION"
-        }
+        }, :status => 401
       }
     end
   end
