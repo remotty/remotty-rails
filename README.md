@@ -120,6 +120,8 @@ gem 'omniauth-twitter'
 
 # attachment
 gem 'paperclip'
+
+# paging
 gem 'kaminari'
 ```
 
@@ -182,7 +184,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'letter_opener'
-  gem 'rails-erd'
+  gem 'railroady'
 end
 ```
 
