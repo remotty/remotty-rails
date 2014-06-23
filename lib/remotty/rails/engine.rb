@@ -46,12 +46,6 @@ module Remotty::Rails
         end
       end
 
-      # paperclip
-      Paperclip::Attachment.default_options.update({
-                                                     :url => '/system/:class/:attachment/:id_partition/:style/:hash.:extension',
-                                                     :default_url => ''
-                                                   })
-
       # Devise
       Devise.setup do |config|
         config.skip_session_storage = [:http_auth, :token_header_auth, :params_auth]
