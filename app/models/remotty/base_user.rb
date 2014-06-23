@@ -7,7 +7,7 @@ module Remotty::BaseUser
 
     validates :name, presence: true
 
-    has_attached_file :avatar, :styles => { :original => "512x512#", :small => "200x200#", :thumb => "64x64#" }
+    has_attached_file :avatar, :styles => { :original => "512x512#", :small => "256x256#", :thumb => "128x128#" }
     validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
   end
 
