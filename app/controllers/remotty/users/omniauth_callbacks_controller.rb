@@ -82,7 +82,7 @@ class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
             u.skip_confirmation!
             u.save
           end
-          user.confirm! # 인증 대기 중이면 바로 인증시켜버림
+          user.confirm! unless user.confirmed? # 인증 대기 중이면 바로 인증시켜버림
 
           # oauth 정보 생성
           user.add_oauth_info(auth)
