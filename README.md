@@ -104,7 +104,7 @@ remotty-rails에서 사용중인 라이브러리 입니다.
 * Create Rails API Project
 
 ```sh
-$ gem install rails -v 4.1.1 --no-ri --no-rdoc
+$ gem install rails -v 4.1.4 --no-ri --no-rdoc
 $ rails-api new {{project}} --skip-test-unit --skip-sprockets
 ```
 
