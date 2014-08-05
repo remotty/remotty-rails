@@ -79,10 +79,11 @@ class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
           user = User.find_or_create_by(email: auth[:info][:email]) do |u|
             u.name = auth[:info][:name] || auth[:info][:email]
             u.password = Devise.friendly_token[0,20]
-            u.skip_confirmation!
+            u.skip_confirmation! if u.class.include? Devise::Models::Confirmable
             u.save
           end
-          user.confirm! unless user.confirmed? # 인증 대기 중이면 바로 인증시켜버림
+          # 인증 대기 중이면 바로 인증시켜버림
+          user.confirm! if user.class.include?(Devise::Models::Confirmable) && !user.confirmed?
 
           # oauth 정보 생성
           user.add_oauth_info(auth)
