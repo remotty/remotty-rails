@@ -65,6 +65,9 @@ module Remotty::Rails
         end
       end
 
+      # Log filter
+      ::Rails.application.config.filter_parameters += [:password, :password_confirmation, :credit_card]
+    
       # session for oauth/devise (no cookie)
       ::Rails.application.config.middleware.use Rack::Session::Pool
       ::Rails.application.config.middleware.use ActionDispatch::Session::CookieStore, :cookie_only => false, :defer => true
