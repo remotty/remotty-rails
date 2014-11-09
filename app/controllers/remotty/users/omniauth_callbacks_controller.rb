@@ -46,7 +46,8 @@ class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
       @ret[:error][:data] = user if user
     end
 
-    render :inline => "<script>window.opener.oauthCallback(#{@ret.to_json}); window.close();</script>"
+    render :inline => "<script>window.opener.oauthCallback(#{@ret.to_json}); window.close();</script>",
+           :content_type => 'text/html'
   end
 
   def failure
@@ -57,7 +58,8 @@ class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
       }
     }
 
-    render :inline => "<script>window.opener.oauthCallback(#{@ret.to_json}); window.close();</script>"
+    render :inline => "<script>window.opener.oauthCallback(#{@ret.to_json}); window.close();</script>",
+           :content_type => 'text/html'
   end
 
   alias_method :facebook, :all
