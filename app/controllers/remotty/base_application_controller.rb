@@ -8,10 +8,6 @@ module Remotty::BaseApplicationController
     # To resolve the following error: ActionController::UnknownFormat
     include ActionController::StrongParameters
 
-    # To resolve the following error: undefined method `respond_to'
-    # http://railscasts.com/episodes/348-the-rails-api-gem?language=ko&view=asciicast
-    include ActionController::MimeResponds
-
     # To resolve the following error: undefined method `default_render'
     # https://github.com/rails-api/rails-api/issues/93
     include ActionController::ImplicitRender
