@@ -46,7 +46,7 @@ class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
       @ret[:error][:data] = user if user
     end
 
-    render :inline => "<script>window.opener.oauthCallback(#{@ret.to_json}); window.close();</script>",
+    render :inline => "<script>(window.opener || window).oauthCallback(#{@ret.to_json}); if(window.opener) { window.close(); }</script>",
            :content_type => 'text/html'
   end
 
@@ -58,7 +58,7 @@ class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
       }
     }
 
-    render :inline => "<script>window.opener.oauthCallback(#{@ret.to_json}); window.close();</script>",
+    render :inline => "<script>(window.opener || window).oauthCallback(#{@ret.to_json}); if(window.opener) { window.close(); }</script>",
            :content_type => 'text/html'
   end
 
