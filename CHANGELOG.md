@@ -1,3 +1,7 @@
+# 0.1.3
+
+- fix logout session
+
 # 0.1.2
 
 - support x-auth-header params
