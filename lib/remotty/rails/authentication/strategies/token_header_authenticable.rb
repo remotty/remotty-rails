@@ -58,11 +58,11 @@ module Remotty::Rails
         end
 
         def header_email
-          request.headers["X-Auth-Email"]
+          request.headers["X-Auth-Email"] || request.params["X-Auth-Email"]
         end
 
         def header_token
-          request.headers["X-Auth-Token"]
+          request.headers["X-Auth-Token"] || request.params["X-Auth-Token"]
         end
 
       end
