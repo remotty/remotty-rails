@@ -1,6 +1,5 @@
 class Remotty::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   include Remotty::Users::BaseController
-  include ActionController::Flash
 
   # omniauth callback 처리
   # 정보에 따라 유저를 만들던가 연결하던가 추가 정보를 입력받도록 에러를 리턴함

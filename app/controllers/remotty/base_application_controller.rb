@@ -11,6 +11,10 @@ module Remotty::BaseApplicationController
     # To resolve the following error: undefined method `default_render'
     # https://github.com/rails-api/rails-api/issues/93
     include ActionController::ImplicitRender
+
+    # Cookie
+    include ActionController::Cookies
+    include ActionController::Flash
   end
 
   protected
@@ -43,8 +47,8 @@ module Remotty::BaseApplicationController
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :current_password, :avatar) }
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :avatar, :password, :password_confirmation, :current_password) }
+    devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:name, :email, :password, :current_password, :avatar) }
+    devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:name, :avatar, :password, :password_confirmation, :current_password) }
   end
 
 end

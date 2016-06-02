@@ -49,7 +49,7 @@ module Remotty::Rails
 
       # Devise
       Devise.setup do |config|
-        config.skip_session_storage = [:http_auth, :token_header_auth, :params_auth]
+        config.skip_session_storage = [:http_auth, :token_header_auth]
         config.scoped_views = true
         config.warden do |manager|
           manager.failure_app = Remotty::Rails::Authentication::JsonAuthFailure
@@ -70,9 +70,8 @@ module Remotty::Rails
       ::Rails.application.config.filter_parameters += [:password, :password_confirmation, :credit_card]
     
       # session for oauth/devise (no cookie)
-      ::Rails.application.config.middleware.use Rack::Session::Pool
-      ::Rails.application.config.middleware.use ActionDispatch::Session::CookieStore
-      ::Rails.application.config.middleware.use ActionDispatch::Flash
+      ::Rails.application.config.middleware.use ActionDispatch::Cookies
+      ::Rails.application.config.api_only = false
     end
 
   end
