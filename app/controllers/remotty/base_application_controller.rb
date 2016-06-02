@@ -11,10 +11,6 @@ module Remotty::BaseApplicationController
     # To resolve the following error: undefined method `default_render'
     # https://github.com/rails-api/rails-api/issues/93
     include ActionController::ImplicitRender
-
-    # Cookie
-    include ActionController::Cookies
-    include ActionController::Flash
   end
 
   protected

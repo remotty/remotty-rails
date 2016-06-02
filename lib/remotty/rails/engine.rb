@@ -70,6 +70,7 @@ module Remotty::Rails
       ::Rails.application.config.filter_parameters += [:password, :password_confirmation, :credit_card]
     
       # session for oauth/devise (no cookie)
+      ::Rails.application.config.middleware.use ActionDispatch::Flash
       ::Rails.application.config.middleware.use ActionDispatch::Cookies
       ::Rails.application.config.api_only = false
     end
