@@ -13,11 +13,11 @@ class Remotty::Users::SessionsController < Devise::SessionsController
   # * +failure+ - unauthorized with error message
   #
   def create
-    self.resource = warden.authenticate!(:scope => resource_name)
-    sign_in(resource_name, resource, store: false)
-    yield resource if block_given?
-    token = resource.generate_auth_token!(auth_source)
-    render json: resource.with_token(token)
+    super do |resource|
+      resource.auth_token = resource.generate_auth_token!(auth_source)
+
+      yield resource if block_given?
+    end
   end
 
   # DELETE /resource/sign_out

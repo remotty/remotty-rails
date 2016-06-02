@@ -6,6 +6,7 @@ module Remotty::Rails
         return i18n_message unless request_format
 
         method = "to_#{request_format}"
+
         if method == "to_xml"
           {
             error: {
@@ -26,7 +27,11 @@ module Remotty::Rails
       end
 
       def respond
-        http_auth
+        if http_auth?
+          http_auth
+        else
+          redirect
+        end
       end
     end
   end

@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency         'rack-cors',   '>= 0.2.9'
+  spec.add_dependency         'rack-cors',   '>= 0.4.0'
   spec.add_dependency         'active_model_serializers', '>= 0.8.1'
 
   spec.add_dependency         'devise',      '>= 3.2.4'

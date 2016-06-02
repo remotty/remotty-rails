@@ -22,7 +22,7 @@ module Remotty::Rails
   #   * allow all
   # * Rails middleware
   #   * Rack::Session::Pool
-  #   * ActionDispatch::Session::CookieStore, :cookie_only => false, :defer => true
+  #   * ActionDispatch::Session::CookieStore
   #   * ActionDispatch::Flash
   #
   class Engine < ::Rails::Engine
@@ -34,6 +34,7 @@ module Remotty::Rails
       ActiveSupport.on_load(:action_controller) do
         # wrap parameters
         include ActionController::ParamsWrapper
+        respond_to :html, :json
         wrap_parameters format: [:json] if respond_to?(:wrap_parameters)
 
         # cancan
@@ -70,7 +71,7 @@ module Remotty::Rails
     
       # session for oauth/devise (no cookie)
       ::Rails.application.config.middleware.use Rack::Session::Pool
-      ::Rails.application.config.middleware.use ActionDispatch::Session::CookieStore, :cookie_only => false, :defer => true
+      ::Rails.application.config.middleware.use ActionDispatch::Session::CookieStore
       ::Rails.application.config.middleware.use ActionDispatch::Flash
     end
 
