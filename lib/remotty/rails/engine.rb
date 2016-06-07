@@ -54,7 +54,7 @@ module Remotty::Rails
         config.warden do |manager|
           manager.failure_app = Remotty::Rails::Authentication::JsonAuthFailure
           manager.strategies.add :token_header_authenticable, Remotty::Rails::Authentication::Strategies::TokenHeaderAuthenticable
-          manager.default_strategies(:scope => :user).unshift :token_header_authenticable
+          manager.default_strategies(scope: :user).unshift :token_header_authenticable
         end
       end
 

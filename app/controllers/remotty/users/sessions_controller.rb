@@ -13,6 +13,8 @@ class Remotty::Users::SessionsController < Devise::SessionsController
   # * +failure+ - unauthorized with error message
   #
   def create
+    sign_out(current_user) if current_user
+
     super do |resource|
       resource.auth_token = resource.generate_auth_token!(auth_source)
 
@@ -37,9 +39,6 @@ class Remotty::Users::SessionsController < Devise::SessionsController
         auth_token = user.auth_tokens.where(token: Digest::SHA512.hexdigest(request.headers["X-Auth-Token"])).first
         auth_token.destroy if auth_token
       end
-
-      session.options[:skip] = true
-      response.headers['Set-Cookie'] = 'rack.session=; path=/; expires=Thu, 01-Jan-1970 00:00:00 GMT'
     end
     yield resource if block_given?
 
